@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-16T01:29:19.380Z",
+  "generatedAt": "2026-07-16T01:42:57.930Z",
   "profile": {
     "productName": "AI Learning Pulse",
     "description": "个人 AI 学习雷达",
-    "githubUrl": ""
+    "githubUrl": "https://github.com/Theo-Feng03/ai-learning-pulse"
   },
   "stats": {
     "records90d": 1,
