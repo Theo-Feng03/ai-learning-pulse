@@ -35,3 +35,7 @@ AI_Learning_Pulse_Claude_Code/
 
 # 本地双击启动器（不进仓库）
 *.command
+
+# 双机同步：本地克隆的私有数据仓库与自动备份
+.data-sync/
+prisma/backups/
