@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Fixture Mirror Blog</title>
+    <link>https://mirror.example.com</link>
+    <description>Second feed that reports the same event with a similar title</description>
+    <item>
+      <title>Fixture: New AI model released with longer context - Mirror Blog</title>
+      <link>https://mirror.example.com/news/new-ai-model-longer-context</link>
+      <pubDate>Mon, 13 Jul 2026 09:00:00 GMT</pubDate>
+      <description>Mirror coverage of the same fixture model release event.</description>
+    </item>
+  </channel>
+</rss>

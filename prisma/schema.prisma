@@ -1,0 +1,218 @@
+// AI Learning Pulse 数据模型
+// SQLite 无原生枚举，状态字段使用 String，取值约束见 src/types/domain.ts
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Source {
+  id            String    @id @default(cuid())
+  name          String
+  // RSS | ATOM | GITHUB_RELEASE
+  type          String
+  // 本地私有 URL，禁止导出
+  url           String
+  normalizedUrl String    @unique
+  // 导出时显示的公开名称；为空且 exportAllowed=false 表示私有信源
+  publicName    String?
+  exportAllowed Boolean   @default(false)
+  enabled       Boolean   @default(true)
+  // active | degraded | disabled
+  status        String    @default("active")
+  failureCount  Int       @default(0)
+  lastSuccessAt DateTime?
+  lastErrorCode String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  articles  Article[]
+  runErrors RunError[]
+}
+
+model IngestionRun {
+  id            String    @id @default(cuid())
+  // created | fetching | normalizing | analyzing | completed | partial_failed | failed | failed_stale
+  status        String    @default("created")
+  // manual | cli
+  trigger       String
+  startedAt     DateTime?
+  completedAt   DateTime?
+  sourceTotal   Int       @default(0)
+  sourceSuccess Int       @default(0)
+  sourceFailed  Int       @default(0)
+  fetchedCount  Int       @default(0)
+  newCount      Int       @default(0)
+  dedupCount    Int       @default(0)
+  aiSuccess     Int       @default(0)
+  aiFailed      Int       @default(0)
+  aiSkipped     Int       @default(0)
+  durationMs    Int?
+  // JSON 字符串：聚合错误摘要（不含堆栈与密钥）
+  errorSummary  String?
+  createdAt     DateTime  @default(now())
+
+  errors RunError[]
+}
+
+model StoryGroup {
+  id               String   @id @default(cuid())
+  normalizedTitle  String
+  primaryArticleId String?
+  createdAt        DateTime @default(now())
+
+  articles Article[]
+}
+
+model Article {
+  id              String    @id @default(cuid())
+  sourceId        String
+  canonicalUrl    String    @unique
+  originalUrl     String
+  title           String
+  normalizedTitle String
+  author          String?
+  publishedAt     DateTime?
+  excerpt         String?
+  // 本地保存的正文（可能为空），禁止导出
+  content         String?
+  contentHash     String
+  language        String?
+  // fetched | normalized | analyzed | analyze_failed | ignored | saved
+  status          String    @default("fetched")
+  // AI 处理状态：pending | not_configured | analyzed | analyze_failed | rate_limited | queued | skipped
+  aiStatus        String    @default("pending")
+  storyGroupId    String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  source        Source         @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  storyGroup    StoryGroup?    @relation(fields: [storyGroupId], references: [id], onDelete: SetNull)
+  analysis      AIAnalysis?
+  learningEntry LearningEntry?
+
+  @@index([normalizedTitle])
+  @@index([contentHash])
+  @@index([publishedAt])
+  @@index([status])
+}
+
+model AIAnalysis {
+  id                  String   @id @default(cuid())
+  articleId           String   @unique
+  // 0-100
+  relevanceScore      Int
+  // Model | Product | DeveloperTool | Research | Industry | Community | Other
+  category            String
+  // JSON 字符串数组
+  topics              String
+  summaryZh           String
+  whyItMatters        String
+  // 0-1
+  confidence          Float
+  insufficientContent Boolean  @default(false)
+  provider            String
+  modelName           String
+  promptVersion       String
+  // contentHash + promptVersion + modelName 的哈希，用于缓存
+  inputHash           String
+  createdAt           DateTime @default(now())
+
+  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@index([inputHash])
+}
+
+model LearningEntry {
+  id           String    @id @default(cuid())
+  // MVP：一篇文章一条学习记录
+  articleId    String    @unique
+  // draft | confirmed | published | archived
+  status       String    @default("draft")
+  // 作者字段：创建草稿时必须为空，禁止由 AI 填充
+  userTakeaway String    @default("")
+  whyFollow    String?
+  impact       String?
+  confirmedAt  DateTime?
+  publishedAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  article      Article              @relation(fields: [articleId], references: [id], onDelete: Restrict)
+  topics       LearningEntryTopic[]
+  projectLinks ProjectLink[]
+
+  @@index([status])
+  @@index([publishedAt])
+}
+
+model Topic {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  color     String?
+  createdAt DateTime @default(now())
+
+  entries LearningEntryTopic[]
+}
+
+model LearningEntryTopic {
+  learningEntryId String
+  topicId         String
+
+  entry LearningEntry @relation(fields: [learningEntryId], references: [id], onDelete: Cascade)
+  topic Topic         @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@id([learningEntryId, topicId])
+}
+
+model ProjectLink {
+  id              String  @id @default(cuid())
+  learningEntryId String
+  projectName     String
+  projectUrl      String
+  note            String?
+  isPublic        Boolean @default(false)
+
+  entry LearningEntry @relation(fields: [learningEntryId], references: [id], onDelete: Cascade)
+}
+
+model RunError {
+  id        String   @id @default(cuid())
+  runId     String
+  sourceId  String?
+  articleId String?
+  // fetch | normalize | analyze | export
+  stage     String
+  code      String
+  // 可读错误摘要，不含堆栈、密钥和响应正文
+  message   String
+  retryable Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  run    IngestionRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  source Source?      @relation(fields: [sourceId], references: [id], onDelete: SetNull)
+}
+
+model ExportRun {
+  id            String   @id @default(cuid())
+  // success | export_failed
+  status        String
+  schemaVersion Int      @default(1)
+  filePath      String
+  recordCount   Int      @default(0)
+  checksum      String?
+  errorMessage  String?
+  createdAt     DateTime @default(now())
+}
+
+// 非敏感应用配置（阈值、开关），密钥永远只在环境变量
+model AppSetting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}

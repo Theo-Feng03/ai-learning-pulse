@@ -1,0 +1,49 @@
+{
+  "name": "ai-learning-pulse",
+  "version": "0.1.0",
+  "private": true,
+  "description": "个人 AI 学习雷达：本地采集 AI 资讯，AI 辅助理解，本人确认后形成公开学习轨迹",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint src scripts prisma tests --ext .ts,.tsx",
+    "typecheck": "tsc --noEmit",
+    "db:setup": "prisma migrate deploy && prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "seed:demo": "tsx prisma/seed.ts",
+    "ingest": "tsx scripts/ingest.ts",
+    "export:showcase": "tsx scripts/export-showcase.ts",
+    "site:update": "tsx scripts/export-showcase.ts && cp exports/showcase.json docs/showcase.json",
+    "verify:env": "tsx scripts/verify-env.ts",
+    "test": "vitest run",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "test:e2e": "playwright test",
+    "eval:model": "tsx scripts/eval-model.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "next": "^15.5.20",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "rss-parser": "^3.13.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.6",
+    "@playwright/test": "^1.61.1",
+    "@tailwindcss/postcss": "^4.3.2",
+    "@types/node": "^26.1.1",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^15.5.20",
+    "postcss": "^8.5.19",
+    "prisma": "^6.19.3",
+    "tailwindcss": "^4.3.2",
+    "tsx": "^4.23.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10"
+  }
+}
