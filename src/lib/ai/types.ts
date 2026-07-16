@@ -24,11 +24,25 @@ export interface ProviderHealth {
   message?: string;
 }
 
+export type TargetLang = "zh" | "en";
+
+export interface TranslationInput {
+  title: string;
+  excerpt?: string;
+  targetLang: TargetLang;
+}
+
+export interface TranslationOutput {
+  title: string;
+  excerpt: string;
+}
+
 export interface ModelProvider {
   /** 用于 AIAnalysis.provider 字段，如 "openai-compatible" / "mock" */
   readonly providerName: string;
   readonly modelName: string;
   analyzeArticle(input: ArticleAnalysisInput): Promise<ArticleAnalysisOutput>;
+  translateArticle(input: TranslationInput): Promise<TranslationOutput>;
   healthCheck(): Promise<ProviderHealth>;
 }
 

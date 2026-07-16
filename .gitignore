@@ -32,3 +32,6 @@ coverage/
 AI_Learning_Pulse_Claude_Code/
 
 # 注意：docs/showcase.json 是刻意公开的脱敏产物（GitHub Pages 数据源），不在忽略范围内
+
+# 本地双击启动器（不进仓库）
+*.command

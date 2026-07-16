@@ -90,10 +90,11 @@ model Article {
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
-  source        Source         @relation(fields: [sourceId], references: [id], onDelete: Cascade)
-  storyGroup    StoryGroup?    @relation(fields: [storyGroupId], references: [id], onDelete: SetNull)
+  source        Source               @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  storyGroup    StoryGroup?          @relation(fields: [storyGroupId], references: [id], onDelete: SetNull)
   analysis      AIAnalysis?
   learningEntry LearningEntry?
+  translations  ArticleTranslation[]
 
   @@index([normalizedTitle])
   @@index([contentHash])
@@ -125,6 +126,26 @@ model AIAnalysis {
   article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
 
   @@index([inputHash])
+}
+
+// 机器翻译缓存：AI 生成内容，仅用于本地阅读，永不导出
+model ArticleTranslation {
+  id          String   @id @default(cuid())
+  articleId   String
+  // zh | en
+  targetLang  String
+  title       String
+  excerpt     String?
+  // 原文 contentHash：原文变化后缓存失效
+  contentHash String
+  provider    String
+  modelName   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@unique([articleId, targetLang])
 }
 
 model LearningEntry {

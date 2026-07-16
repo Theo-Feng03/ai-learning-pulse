@@ -33,6 +33,26 @@ export function buildUserPrompt(input: ArticleAnalysisInput): string {
   ].join("\n");
 }
 
+export function buildTranslateSystemPrompt(targetLang: "zh" | "en"): string {
+  const langName = targetLang === "zh" ? "简体中文" : "英文（English）";
+  return `你是一名专业的科技内容翻译。把用户提供的文章标题和摘要忠实翻译为${langName}。
+
+约束：
+- 忠实原文，不增删信息，不加入评论。
+- 产品名、模型名、公司名、版本号、代码标识符保留原文，不翻译。
+- 摘要为空时输出空字符串。
+
+只输出一个 JSON 对象，不要输出其他文本。格式：
+{
+  "title": "翻译后的标题",
+  "excerpt": "翻译后的摘要"
+}`;
+}
+
+export function buildTranslateUserPrompt(title: string, excerpt?: string): string {
+  return JSON.stringify({ title, excerpt: excerpt ?? "" });
+}
+
 export function buildRepairPrompt(invalidOutput: string): string {
   return `你上一次的输出不是合法的 JSON 或不符合要求的字段格式。请把下面的内容修复为符合系统提示中格式要求的单个 JSON 对象，只输出 JSON：\n\n${invalidOutput.slice(0, 4000)}`;
 }

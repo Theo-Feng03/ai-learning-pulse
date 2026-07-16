@@ -5,6 +5,8 @@ import {
   type ArticleAnalysisOutput,
   type ModelProvider,
   type ProviderHealth,
+  type TranslationInput,
+  type TranslationOutput,
 } from "./types";
 
 export type MockBehavior =
@@ -63,6 +65,19 @@ export class MockProvider implements ModelProvider {
       case "timeout":
         throw new ModelError("timeout", "模型调用超时", true);
     }
+  }
+
+  async translateArticle(input: TranslationInput): Promise<TranslationOutput> {
+    this.calls++;
+    const behavior = this.behaviors.shift();
+    if (behavior && behavior.kind !== "valid") {
+      throw new ModelError("invalid_json", "翻译输出无法解析为合法 JSON（已尝试修复一次）", false);
+    }
+    const prefix = input.targetLang === "zh" ? "【中文译文】" : "[EN] ";
+    return {
+      title: `${prefix}${input.title}`,
+      excerpt: input.excerpt ? `${prefix}${input.excerpt}` : "",
+    };
   }
 
   async healthCheck(): Promise<ProviderHealth> {

@@ -1,11 +1,19 @@
-import { buildRepairPrompt, buildUserPrompt, SYSTEM_PROMPT } from "./prompt";
-import { parseAnalysisOutput } from "./schema";
+import {
+  buildRepairPrompt,
+  buildTranslateSystemPrompt,
+  buildTranslateUserPrompt,
+  buildUserPrompt,
+  SYSTEM_PROMPT,
+} from "./prompt";
+import { parseAnalysisOutput, parseTranslationOutput } from "./schema";
 import {
   ModelError,
   type ArticleAnalysisInput,
   type ArticleAnalysisOutput,
   type ModelProvider,
   type ProviderHealth,
+  type TranslationInput,
+  type TranslationOutput,
 } from "./types";
 
 export interface OpenAICompatibleConfig {
@@ -94,6 +102,29 @@ export class OpenAICompatibleProvider implements ModelProvider {
         return parseAnalysisOutput(repaired, input.allowedTopics);
       } catch {
         throw new ModelError("invalid_json", "模型输出无法解析为合法 JSON（已尝试修复一次）", false);
+      }
+    }
+  }
+
+  async translateArticle(input: TranslationInput): Promise<TranslationOutput> {
+    const system = buildTranslateSystemPrompt(input.targetLang);
+    const user = buildTranslateUserPrompt(input.title, input.excerpt?.slice(0, 4000));
+    const raw = await this.complete([
+      { role: "system", content: system },
+      { role: "user", content: user },
+    ]);
+    try {
+      return parseTranslationOutput(raw);
+    } catch {
+      // 非法 JSON：同模型 repair 一次
+      const repaired = await this.complete([
+        { role: "system", content: system },
+        { role: "user", content: buildRepairPrompt(raw) },
+      ]);
+      try {
+        return parseTranslationOutput(repaired);
+      } catch {
+        throw new ModelError("invalid_json", "翻译输出无法解析为合法 JSON（已尝试修复一次）", false);
       }
     }
   }

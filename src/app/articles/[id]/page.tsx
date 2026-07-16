@@ -3,8 +3,9 @@ import { notFound } from "next/navigation";
 import { Badge, aiStatusTone, Card } from "@/components/ui";
 import { prisma } from "@/lib/db/client";
 import { getEnv } from "@/lib/env";
-import { AI_STATUS_LABELS, formatDateTime, parseTopics } from "@/lib/format";
+import { AI_STATUS_LABELS, parseTopics } from "@/lib/format";
 import { ArticleActions } from "./ArticleActions";
+import { ArticleContent } from "./ArticleContent";
 
 export const dynamic = "force-dynamic";
 
@@ -34,28 +35,17 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
         ← 返回收件箱
       </Link>
 
-      <Card>
-        <h1 className="text-lg font-bold">{article.title}</h1>
-        <p className="mt-1 text-sm text-stone-500">
-          {article.source.name}
-          {article.author ? `｜${article.author}` : ""}｜{formatDateTime(article.publishedAt)}
-        </p>
-        <p className="mt-2">
-          <a
-            href={article.originalUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="text-sm text-sky-700 underline"
-          >
-            打开原文 ↗
-          </a>
-        </p>
-        {article.excerpt ? (
-          <p className="mt-3 whitespace-pre-wrap text-sm text-stone-700">{article.excerpt}</p>
-        ) : (
-          <p className="mt-3 text-sm text-stone-400">该来源未提供摘要片段。</p>
-        )}
-      </Card>
+      <ArticleContent
+        articleId={article.id}
+        title={article.title}
+        excerpt={article.excerpt}
+        language={article.language}
+        sourceName={article.source.name}
+        author={article.author}
+        publishedAt={article.publishedAt?.toISOString() ?? null}
+        originalUrl={article.originalUrl}
+        modelConfigured={modelConfigured}
+      />
 
       <Card
         title={
