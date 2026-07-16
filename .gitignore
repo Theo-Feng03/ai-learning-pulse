@@ -38,3 +38,6 @@ AI_Learning_Pulse_Claude_Code/
 # 双机同步：本地克隆的私有数据仓库与自动备份
 .data-sync/
 prisma/backups/
+
+# App 图标构建产物
+.app-build/

@@ -89,8 +89,13 @@ fi
 
 chmod +x ./*.command 2>/dev/null || true
 
+say "⑧ 安装应用图标（AI Learning Pulse.app）…"
+pnpm exec playwright install chromium >/dev/null 2>&1 || true
+bash scripts/make-app.sh || echo "  ⚠ 应用图标生成失败（可稍后执行 pnpm app:install 重试），不影响使用"
+
 say "✅ 安装完成！"
 echo "启动方式（任选其一）："
+echo "  · 启动台点击「AI Learning Pulse」图标（可拖到 Dock 常驻）"
 echo "  · Finder 中双击「启动 AI Learning Pulse.command」"
 echo "  · 终端执行：cd $TARGET_DIR && pnpm dev"
 open . 2>/dev/null || true

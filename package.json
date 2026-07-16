@@ -16,6 +16,8 @@
     "export:showcase": "tsx scripts/export-showcase.ts",
     "site:update": "tsx scripts/export-showcase.ts && cp exports/showcase.json docs/showcase.json",
     "verify:env": "tsx scripts/verify-env.ts",
+    "stop": "bash scripts/stop.sh",
+    "app:install": "bash scripts/make-app.sh",
     "sync:init": "tsx scripts/sync.ts init",
     "sync:pull": "tsx scripts/sync.ts pull",
     "sync:push": "tsx scripts/sync.ts push",
