@@ -30,8 +30,10 @@ export class MockProvider implements ModelProvider {
 
   private defaultOutput(input: ArticleAnalysisInput): ArticleAnalysisOutput {
     const insufficient = !input.content && !input.excerpt;
+    const isChinese = /[一-鿿]/.test(input.title);
     const raw = JSON.stringify({
       relevanceScore: /\bai|model|llm|agent\b/i.test(input.title) ? 80 : 35,
+      ...(isChinese ? {} : { titleZh: `【中文标题】${input.title.slice(0, 60)}` }),
       category: "Product",
       topics: [input.allowedTopics[0] ?? "Other"],
       summaryZh: `【mock】${input.title.slice(0, 80)} 的确定性摘要。`,

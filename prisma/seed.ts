@@ -86,6 +86,7 @@ interface DemoArticle {
   topics: string[];
   category: string;
   relevanceScore: number;
+  titleZh?: string;
   summaryZh: string;
   whyItMatters: string;
 }
@@ -100,6 +101,7 @@ const DEMO_ARTICLES: DemoArticle[] = [
     topics: ["AI Search"],
     category: "Product",
     relevanceScore: 86,
+    titleZh: "演示：为助手引入结构化检索",
     summaryZh: "【演示】该文章介绍了一种面向助手场景的结构化检索能力，强调检索结果的可引用性。",
     whyItMatters: "结构化检索与个人知识工作流相关，可能值得关注其对搜索类产品的影响。",
   },
@@ -112,6 +114,7 @@ const DEMO_ARTICLES: DemoArticle[] = [
     topics: ["Model Evaluation", "Open Source Models"],
     category: "Research",
     relevanceScore: 78,
+    titleZh: "演示：评测开放模型的长上下文能力",
     summaryZh: "【演示】该文章讨论了开放模型在长上下文任务上的评测方法与常见误区。",
     whyItMatters: "评测方法影响模型选型判断，可能值得关注其提出的基准设计。",
   },
@@ -124,6 +127,7 @@ const DEMO_ARTICLES: DemoArticle[] = [
     topics: ["Model Evaluation"],
     category: "Research",
     relevanceScore: 75,
+    titleZh: "演示：评测开放模型的长上下文任务（镜像）",
     summaryZh: "【演示】同一事件的另一来源报道，用于演示标题相似聚合。",
     whyItMatters: "多来源覆盖同一事件时，聚合可以减少重复阅读。",
   },
@@ -136,6 +140,7 @@ const DEMO_ARTICLES: DemoArticle[] = [
     topics: ["Inference & Serving", "Developer Tools"],
     category: "DeveloperTool",
     relevanceScore: 70,
+    titleZh: "演示：ollama v0.demo.1 版本发布",
     summaryZh: "【演示】该版本改进了本地推理性能并新增模型支持。",
     whyItMatters: "本地推理工具链的更新可能影响离线开发体验。",
   },
@@ -148,6 +153,7 @@ const DEMO_ARTICLES: DemoArticle[] = [
     topics: ["Other"],
     category: "Community",
     relevanceScore: 30,
+    titleZh: "演示：每周社区综述",
     summaryZh: "【演示】社区周报类内容，正文不足。",
     whyItMatters: "常规社区动态，关注价值有限。",
   },
@@ -185,6 +191,7 @@ async function main() {
       create: {
         articleId: article.id,
         relevanceScore: demo.relevanceScore,
+        titleZh: demo.titleZh ?? null,
         category: demo.category,
         topics: JSON.stringify(demo.topics),
         summaryZh: demo.summaryZh,

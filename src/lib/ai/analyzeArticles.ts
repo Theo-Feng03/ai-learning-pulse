@@ -62,6 +62,7 @@ async function analyzeOne(
       create: {
         articleId: article.id,
         relevanceScore: output.relevanceScore,
+        titleZh: output.titleZh ?? null,
         category: output.category,
         topics: JSON.stringify(output.topics),
         summaryZh: output.summaryZh,
@@ -75,6 +76,7 @@ async function analyzeOne(
       },
       update: {
         relevanceScore: output.relevanceScore,
+        titleZh: output.titleZh ?? null,
         category: output.category,
         topics: JSON.stringify(output.topics),
         summaryZh: output.summaryZh,

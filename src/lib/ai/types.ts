@@ -11,6 +11,8 @@ export interface ArticleAnalysisInput {
 
 export interface ArticleAnalysisOutput {
   relevanceScore: number;
+  /** 中文标题（原文非中文时的忠实翻译） */
+  titleZh?: string;
   category: string;
   topics: string[];
   summaryZh: string;

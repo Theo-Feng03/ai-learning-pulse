@@ -12,6 +12,8 @@ export function parseJsonBlock(raw: string): unknown {
 
 export const analysisOutputSchema = z.object({
   relevanceScore: z.number().int().min(0).max(100),
+  // 中文标题：原文非中文时的忠实翻译；模型可省略（如原文已是中文）
+  titleZh: z.string().max(500).optional(),
   category: z.enum(AI_CATEGORIES),
   topics: z.array(z.string().min(1)).max(5),
   summaryZh: z.string().min(1).max(2000),

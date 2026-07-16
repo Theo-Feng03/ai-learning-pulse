@@ -107,6 +107,8 @@ model AIAnalysis {
   articleId           String   @unique
   // 0-100
   relevanceScore      Int
+  // 中文标题（原文非中文时由模型翻译，用于收件箱快速浏览）
+  titleZh             String?
   // Model | Product | DeveloperTool | Research | Industry | Community | Other
   category            String
   // JSON 字符串数组

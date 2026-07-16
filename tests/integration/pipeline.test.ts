@@ -29,6 +29,8 @@ describe("确定性采集管道", () => {
       expect(article.status).toBe("analyzed");
       expect(article.analysis).not.toBeNull();
       expect(article.analysis!.provider).toBe("mock");
+      // 英文原题应带有中文标题，供收件箱快速浏览
+      expect(article.analysis!.titleZh).toContain("【中文标题】");
     }
     // utm 参数已从 canonicalUrl 移除
     const modelPost = articles.find((a) => a.originalUrl.includes("utm_source"));

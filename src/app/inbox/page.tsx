@@ -14,7 +14,7 @@ interface ArticleItem {
   status: string;
   aiStatus: string;
   source: { id: string; name: string };
-  analysis: { relevanceScore: number; topics: string; summaryZh: string } | null;
+  analysis: { relevanceScore: number; titleZh: string | null; topics: string; summaryZh: string } | null;
   learningEntry: { id: string; status: string } | null;
   storyGroup: { _count: { articles: number } } | null;
 }
@@ -153,8 +153,13 @@ function InboxContent() {
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <Link href={`/articles/${item.id}`} className="font-medium hover:underline">
-                    {item.title}
+                    {item.analysis?.titleZh ?? item.title}
                   </Link>
+                  {item.analysis?.titleZh ? (
+                    <p className="mt-0.5 truncate text-xs text-stone-400" title={item.title}>
+                      原题：{item.title}
+                    </p>
+                  ) : null}
                   <p className="mt-0.5 text-xs text-stone-400">
                     {item.source.name}｜{formatDateTime(item.publishedAt)}
                     {item.storyGroup && item.storyGroup._count.articles > 1

@@ -70,7 +70,8 @@ export const ALLOWED_TOPICS = [
 ] as const;
 
 export const SHOWCASE_SCHEMA_VERSION = 1;
-export const PROMPT_VERSION = "v1";
+// v2：分析输出新增 titleZh（中文标题）
+export const PROMPT_VERSION = "v2";
 
 // 有效学习记录：userTakeaway 去除空白后的最小长度
 export const MIN_TAKEAWAY_LENGTH = 10;
