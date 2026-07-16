@@ -178,7 +178,10 @@ export async function runIngestion(runId: string, deps: IngestionDeps = {}) {
   }
 
   try {
-    const sources = await prisma.source.findMany({ where: { enabled: true } });
+    // MANUAL 为手动学习记录的虚拟信源，永不参与抓取
+    const sources = await prisma.source.findMany({
+      where: { enabled: true, type: { not: "MANUAL" } },
+    });
     await prisma.ingestionRun.update({
       where: { id: runId },
       data: { status: "fetching", startedAt, sourceTotal: sources.length },

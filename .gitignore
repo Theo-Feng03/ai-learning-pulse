@@ -41,3 +41,6 @@ prisma/backups/
 
 # App 图标构建产物
 .app-build/
+
+# WeWe RSS 本地数据（含微信读书凭据），永不入库
+docker/wewe-rss/data/

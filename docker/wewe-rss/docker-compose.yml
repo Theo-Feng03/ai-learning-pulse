@@ -1,0 +1,21 @@
+# WeWe RSS：把微信公众号转成标准 RSS 的开源桥接服务（本地运行）
+# 项目主页：https://github.com/cooderl/wewe-rss
+#
+# 启动：cd docker/wewe-rss && docker compose up -d
+# 之后打开 http://localhost:4000 按 README.md 完成登录与订阅。
+services:
+  wewe-rss:
+    image: cooderl/wewe-rss-sqlite:latest
+    container_name: wewe-rss
+    # 只监听本机回环地址，不暴露到局域网
+    ports:
+      - "127.0.0.1:4000:4000"
+    environment:
+      - DATABASE_TYPE=sqlite
+      # 管理界面的访问口令：首次启动前务必改成自己的
+      - AUTH_CODE=change-me-before-start
+      # 公众号内容抓取间隔（分钟），过于频繁有账号风险
+      - CRON_EXPRESSION=35 5,17 * * *
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped

@@ -43,7 +43,15 @@ export default async function LearningPage({
 
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-bold">学习时间线</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-xl font-bold">学习时间线</h1>
+        <Link
+          href="/learning/new"
+          className="inline-flex items-center rounded-md bg-stone-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-stone-700"
+        >
+          + 手动添加学习记录
+        </Link>
+      </div>
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatTile label="90 天记录" value={stats.records90d} hint="仅已发布" />
