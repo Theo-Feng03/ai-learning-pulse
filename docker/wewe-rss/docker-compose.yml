@@ -12,8 +12,8 @@ services:
       - "127.0.0.1:4000:4000"
     environment:
       - DATABASE_TYPE=sqlite
-      # 管理界面的访问口令：首次启动前务必改成自己的
-      - AUTH_CODE=change-me-before-start
+      # 管理界面的访问口令：写在同目录 .env 的 WEWE_AUTH_CODE 中（已被 gitignore）
+      - AUTH_CODE=${WEWE_AUTH_CODE:-change-me-before-start}
       # 公众号内容抓取间隔（分钟），过于频繁有账号风险
       - CRON_EXPRESSION=35 5,17 * * *
     volumes:

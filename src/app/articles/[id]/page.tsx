@@ -39,6 +39,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
         articleId={article.id}
         title={article.title}
         excerpt={article.excerpt}
+        content={article.content}
         language={article.language}
         sourceName={article.source.name}
         author={article.author}

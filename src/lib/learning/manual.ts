@@ -29,6 +29,8 @@ export interface ManualEntryInput {
   sourceName?: string;
   /** 摘要/备注（可选），会作为文章摘要保存 */
   excerpt?: string;
+  /** 正文（可选，如视频口播稿）：只存本地，永不导出 */
+  content?: string;
 }
 
 export async function createManualEntry(input: ManualEntryInput) {
@@ -74,6 +76,7 @@ export async function createManualEntry(input: ManualEntryInput) {
   });
 
   const excerpt = input.excerpt?.trim() || null;
+  const content = input.content?.trim() || null;
   const article = await prisma.article.create({
     data: {
       sourceId: source.id,
@@ -82,7 +85,8 @@ export async function createManualEntry(input: ManualEntryInput) {
       title,
       normalizedTitle: normalizeTitle(title),
       excerpt,
-      contentHash: contentHashOf(title, excerpt),
+      content,
+      contentHash: contentHashOf(title, excerpt, content),
       language: /[一-鿿]/.test(title) ? "zh" : "en",
       status: "saved",
       aiStatus: "skipped",

@@ -70,6 +70,17 @@ MODEL_NAME="gpt-4o-mini"
 
 短视频、公众号文章、书、课程等爬不到的内容，用「学习时间线 → 手动添加学习记录」：粘贴链接 + 标题即可创建草稿，之后照常填结论、确认、发布——统计与导出口径完全一致，来源仍然可追溯。
 
+### 视频转学习草稿（可选）
+
+「学习时间线 → 手动添加学习记录」页面提供视频入口，两种模式：
+
+- **贴链接**：B 站 / YouTube / TikTok 稳定支持，抖音尽力直连
+- **上传文件**：抖音等直连失败时的保底通道（手机下载 → AirDrop → 上传，需附原视频链接保证来源可追溯）
+
+流程全部本地完成：yt-dlp 只抽音频 → 本地 Whisper 转口播稿 → **音频用完即删** → 口播稿存入 `Article.content`（永不导出）→ 如已配模型自动生成 AI 摘要 → 你照常写学习结论。
+
+依赖（macOS）：`brew install yt-dlp ffmpeg whisper-cpp`，模型放 `data/models/ggml-small.bin`（可用 `WHISPER_MODEL` 环境变量改路径；国内网络建议从 ModelScope 镜像下载）。
+
 ### 接入微信公众号（可选）
 
 通过本地部署的 WeWe RSS 桥接：见 [docker/wewe-rss/README.md](docker/wewe-rss/README.md)。桥接后公众号文章与其他信源一样进入采集管道。

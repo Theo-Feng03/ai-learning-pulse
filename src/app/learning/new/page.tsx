@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { btnPrimary, Card, inputCls, labelCls } from "@/components/ui";
+import { VideoIntake } from "./VideoIntake";
 
 // 手动添加学习记录：适用于无法自动采集的信息源（短视频、公众号、书、课程…）
 export default function ManualEntryPage() {
@@ -89,6 +90,8 @@ export default function ManualEntryPage() {
           {error ? <span className="text-sm text-red-600">{error}</span> : null}
         </div>
       </Card>
+
+      <VideoIntake />
     </div>
   );
 }

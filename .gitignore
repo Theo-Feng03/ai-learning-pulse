@@ -44,3 +44,6 @@ prisma/backups/
 
 # WeWe RSS 本地数据（含微信读书凭据），永不入库
 docker/wewe-rss/data/
+
+# WeWe RSS 本地口令
+docker/wewe-rss/.env

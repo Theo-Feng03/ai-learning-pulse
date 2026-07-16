@@ -13,6 +13,7 @@ export function ArticleContent({
   articleId,
   title,
   excerpt,
+  content,
   language,
   sourceName,
   author,
@@ -23,6 +24,7 @@ export function ArticleContent({
   articleId: string;
   title: string;
   excerpt: string | null;
+  content: string | null;
   language: string | null;
   sourceName: string;
   author: string | null;
@@ -106,6 +108,16 @@ export function ArticleContent({
         <p className="mt-2 text-xs text-stone-400">
           机器翻译仅供阅读参考，不会进入学习记录或公开导出。
         </p>
+      ) : null}
+      {content ? (
+        <details className="mt-3">
+          <summary className="cursor-pointer text-sm text-stone-500">
+            查看全文 / 口播稿（{content.length} 字，仅本地可见，永不导出）
+          </summary>
+          <p className="mt-2 whitespace-pre-wrap rounded bg-stone-50 p-3 text-sm text-stone-700">
+            {content}
+          </p>
+        </details>
       ) : null}
     </Card>
   );

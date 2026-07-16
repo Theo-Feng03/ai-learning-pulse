@@ -233,6 +233,21 @@ model ExportRun {
   createdAt     DateTime @default(now())
 }
 
+// 视频转写任务：链接/文件 → 音频 → 口播稿 → 学习草稿（音频用完即删，口播稿只存本地）
+model VideoJob {
+  id        String   @id @default(cuid())
+  // pending | downloading | transcribing | creating | analyzing | done | failed
+  status    String   @default("pending")
+  sourceUrl String?
+  fileName  String?
+  title     String?
+  // 失败原因或阶段说明（可读文本，不含堆栈）
+  message   String?
+  entryId   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 // 非敏感应用配置（阈值、开关），密钥永远只在环境变量
 model AppSetting {
   key       String   @id
