@@ -7,6 +7,18 @@
 
 ## 快速开始
 
+### macOS 一键安装（推荐）
+
+新电脑上打开终端，粘贴一行：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Theo-Feng03/ai-learning-pulse/main/setup.sh | bash
+```
+
+自动完成：Homebrew / Node / pnpm / GitHub CLI 安装 → GitHub 登录 → 克隆代码到 `~/Documents/AI_NEWS` → 依赖安装 → 数据库初始化 → 从你的私有数据仓库拉取全部数据（没有则写入演示数据）。装完后双击文件夹里的「启动 AI Learning Pulse.command」即可使用。重复运行安全（幂等）。
+
+### 手动安装
+
 要求：Node.js ≥ 20（建议当前 LTS）、pnpm ≥ 10。
 
 ```bash
@@ -120,7 +132,7 @@ git add docs/showcase.json && git commit -m "更新学习记录" && git push
 pnpm sync:init      # 自动创建私有仓库并推送当前数据
 ```
 
-第二台电脑：克隆代码仓、`pnpm db:setup` 后，在 `.env` 配置相同的 `SYNC_REPO`，执行 `pnpm sync:pull` 即得到全部数据。
+第二台电脑：直接跑上面的「macOS 一键安装」即可，脚本会自动配置 `SYNC_REPO` 并拉取全部数据；手动路线则是克隆代码仓、`pnpm db:setup` 后在 `.env` 配置相同的 `SYNC_REPO`，执行 `pnpm sync:pull`。
 
 日常使用：
 
